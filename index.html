@@ -1,100 +1,59 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>행운의 포춘쿠키 뽑기</title>
-    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.1/kakao.min.js" integrity="sha384-kDljxUXHaJ9xAb2szkHcUaFXtkFUwyCgwE0A7Tg311+nj/O2Oq2XFm9OsuPqHquR" crossorigin="anonymous"></script>
-    <style>
-        body { font-family: 'Apple SD Gothic Neo', sans-serif; text-align: center; padding-top: 50px; background-color: #f9f9f9; }
-        #drawBtn { padding: 15px 30px; font-size: 18px; cursor: pointer; background-color: #ff9800; color: white; border: none; border-radius: 50px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        #drawBtn:disabled { background-color: #ccc; }
-        #resultMsg { margin-top: 30px; color: #333; line-height: 1.6; padding: 0 20px; }
-        #shareBtn {
-            display: none; 
-            margin-top: 20px;
-            background-color: #FEE500;
-            border: none;
-            padding: 12px 25px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-    </style>
-</head>
-<body>
-    <h1>🥠 행운의 포춘쿠키</h1>
-    <p>오늘 당신을 기다리는 메시지는 무엇일까요?</p>
-    <button id="drawBtn" onclick="drawCookie()">쿠키 열어보기</button>
-    <h2 id="resultMsg"></h2>
+// 1. 카카오 SDK 초기화
+Kakao.init('ee4172b60f932968f266175b7efddddf');
+
+// 2. 포춘쿠키 문구
+const fortuneMessages = [
+    "오늘은 뜻밖의 행운이 찾아올 거예요! 🍀",
+    "조만간 반가운 소식이 들려올 것입니다. 💌",
+    "주변 사람들에게 미소 지어보세요. 좋은 일이 생길 거예요! 😊",
+    "작은 용기가 큰 변화를 만들어냅니다 💫 오늘 한 걸음 내딛어 보세요",
+    "당신이 생각하는 것보다 훨씬 잘하고 있습니다 🌱 스스로를 믿어보세요",
+    "지금의 노력이 가까운 미래에 기분 좋은 결과로 돌아옵니다 🎁",
+    "새로운 기회는 준비된 사람에게 찾아옵니다 🚪 이미 준비는 충분합니다",
+    "오늘의 선택이 내일의 당신을 더 빛나게 만듭니다 ✨ 자신 있게 선택하세요"
+];
+
+// 3. 쿠키 뽑기 함수
+function drawCookie() {
+    const randomIndex = Math.floor(Math.random() * fortuneMessages.length);
+    const pickedMessage = fortuneMessages[randomIndex];
+
+    // 화면에 결과 출력 및 버튼 1회용으로 제어
+    document.getElementById("resultMsg").innerText = pickedMessage;
+    document.getElementById("drawBtn").disabled = true;
+
+    // 공유 버튼 노출 및 이벤트 연결
+    const shareBtn = document.getElementById("shareBtn");
+    shareBtn.style.display = "inline-block";
+    shareBtn.onclick = function() {
+        shareResultToKakao(pickedMessage);
+    };
+}
+
+// 4. 카카오톡 결과 공유 함수 (가짜 URL 수정 완료)
+function shareResultToKakao(resultText) {
+    const pageUrl = 'https://heatheryunryujang.github.io/fortune-cookie-for-13meeting/';
     
-    <button id="shareBtn">카카오톡으로 행운 공유하기</button>
-
-    <script>
-        // 1. 카카오 SDK 초기화 (본인의 JavaScript 키를 입력하세요)
-        Kakao.init('ee4172b60f932968f266175b7efddddf');
-
-        // 2. 업데이트된 8가지 포춘쿠키 문구
-        let fortuneMessages = [
-            "오늘은 뜻밖의 행운이 찾아올 거예요! 🍀",
-            "조만간 반가운 소식이 들려올 것입니다. 💌",
-            "주변 사람들에게 미소 지어보세요. 좋은 일이 생길 거예요! 😊",
-            "작은 용기가 큰 변화를 만들어냅니다 💫 오늘 한 걸음 내딛어 보세요",
-            "당신이 생각하는 것보다 훨씬 잘하고 있습니다 🌱 스스로를 믿어보세요",
-            "지금의 노력이 가까운 미래에 기분 좋은 결과로 돌아옵니다 🎁",
-            "새로운 기회는 준비된 사람에게 찾아옵니다 🚪 이미 준비는 충분합니다",
-            "오늘의 선택이 내일의 당신을 더 빛나게 만듭니다 ✨ 자신 있게 선택하세요"
-        ];
-
-        // 3. 쿠키 뽑기 함수
-        function drawCookie() {
-            if (fortuneMessages.length === 0) {
-                alert("오늘 준비된 모든 행운의 메시지가 소진되었습니다!");
-                return;
-            }
-
-            const randomIndex = Math.floor(Math.random() * fortuneMessages.length);
-            const pickedMessage = fortuneMessages[randomIndex];
-
-            // 화면에 결과 출력 및 버튼 제어
-            document.getElementById("resultMsg").innerText = pickedMessage;
-            document.getElementById("drawBtn").disabled = true;
-
-            // 공유 버튼 활성화 및 클릭 이벤트 연결
-            const shareBtn = document.getElementById("shareBtn");
-            shareBtn.style.display = "inline-block";
-            shareBtn.onclick = function() {
-                shareResultToKakao(pickedMessage);
-            };
-
-            // 중복 방지를 위해 배열에서 삭제 (서버/DB 연동 시 이 로직이 서버에서 처리되어야 합니다)
-            fortuneMessages.splice(randomIndex, 1);
-        }
-
-        // 4. 카카오톡 결과 공유 함수 (Feed 타입)
-        function shareResultToKakao(resultText) {
-            Kakao.Share.sendDefault({
-                objectType: 'feed',
-                content: {
-                    title: '🥠 나의 행운 메시지가 도착했어요!',
-                    description: resultText,
-                    imageUrl: 'https://미리_준비한_행운_이미지_주소.png', // 공유 시 보여줄 예쁜 이미지 주소
-                    link: {
-                        mobileWebUrl: 'https://포춘쿠키_페이지_주소.com',
-                        webUrl: 'https://포춘쿠키_페이지_주소.com',
-                    },
+    Kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+            title: '🥠 나의 행운 메시지가 도착했어요!',
+            description: resultText,
+            // 실제 이미지가 있다면 아래 URL을 교체하세요. 없다면 이 줄을 지워도 무방합니다.
+            imageUrl: 'https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png',
+            link: {
+                mobileWebUrl: pageUrl,
+                webUrl: pageUrl,
+            },
+        },
+        buttons: [
+            {
+                title: '나도 포춘쿠키 뽑기',
+                link: {
+                    mobileWebUrl: pageUrl,
+                    webUrl: pageUrl,
                 },
-                buttons: [
-                    {
-                        title: '나도 행운 뽑기',
-                        link: {
-                            mobileWebUrl: 'https://포춘쿠키_페이지_주소.com',
-                            webUrl: 'https://포춘쿠키_페이지_주소.com',
-                        },
-                    },
-                ],
-            });
-        }
-    </script>
-</body>
-</html>
+            },
+        ],
+    });
+}
